@@ -1,0 +1,83 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Breakpoints anywhere in tier4/ -- contracts, client, worker, methods.
+      // This is the one to use when exploring how a task flows through.
+      "name": "tier4: drain queue once (CLI)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "tier4.cli",
+      "args": ["once", "-v"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "tier4: health (CLI)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "tier4.cli",
+      "args": ["health", "-v"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "tier4: poll continuously (CLI)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "tier4.cli",
+      "args": ["poll", "-v"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // NOTE: no --reload. Uvicorn's reloader runs the app in a *child*
+      // process that the debugger is not attached to, so breakpoints are
+      // silently ignored. Debug without reload; use reload when not debugging.
+      "name": "tier4: FastAPI server (no reload, debuggable)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["tier4.app:app", "--host", "127.0.0.1", "--port", "8901"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "tier4: seed a pilot question (fixture)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "fixtures.seed_pilot_question",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "tier4: pytest (current file)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}", "-vv"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      // Attach to an already-running process started with:
+      //   python -m debugpy --listen 5678 --wait-for-client -m tier4.cli poll
+      // Use this to debug a worker running inside Docker or started elsewhere.
+      "name": "tier4: attach to running process",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": { "host": "127.0.0.1", "port": 5678 },
+      "pathMappings": [
+        { "localRoot": "${workspaceFolder}", "remoteRoot": "." }
+      ],
+      "justMyCode": false
+    }
+  ]
+}

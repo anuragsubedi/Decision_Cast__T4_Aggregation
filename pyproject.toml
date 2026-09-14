@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decisioncast-tier4"
+version = "0.1.0"
+description = "DecisionCast Tier 4 — data-science aggregation microservice"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "fastapi-cli>=0.0.5",
+    "uvicorn[standard]>=0.32",
+    "httpx>=0.27",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.5",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "debugpy>=1.8"]
+
+# Installing the project (`pip install -e .`) is what puts `tier4` on sys.path.
+# Without it, `uvicorn tier4.app:app` only works from the project root, and
+# running `uvicorn app:app` from inside tier4/ fails with ModuleNotFoundError
+# because app.py then loads as a top-level module and its `from tier4....`
+# imports have no package to resolve against.
+[tool.setuptools]
+packages = ["tier4", "tier4.contracts", "tier4.client", "tier4.methods", "tier4.worker"]
+
+[project.scripts]
+tier4 = "tier4.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
