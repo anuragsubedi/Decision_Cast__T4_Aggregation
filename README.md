@@ -4,7 +4,7 @@ Python data-science microservice for the DecisionCast platform. It consumes the 
 backend's aggregation task queue, runs aggregation methods, and writes results
 back into the same table the backend's in-process C# methods use.
 
-**Status: scaffold.** The contract, the client, the worker loop and the method
+**Status: initial scaffold.** The contract, the client, the worker loop and the method
 registry are complete and verified end to end against a live v2 backend. The
 methods that ship with it are placeholder aggregations — the real statistical work
 (GP diversity/consensus, LLM rationale extraction, chimeric priming) is not
@@ -27,6 +27,8 @@ tier 1 directly.
 `Tasks` table and exposes endpoints to drain them.
 
 ## Quick start
+
+We use makefiles to to simplify installation of dependencies, manage application's state, and debug locally.
 
 ```bash
 make install          # venv + `pip install -e .`
@@ -62,7 +64,7 @@ Sending `http://` to :8855 gets the connection dropped mid-handshake, which
 surfaces as `httpx.RemoteProtocolError: Server disconnected without sending a response`. The client detects this case and says so explicitly.
 
 The local dev certificate is self-signed, hence `TIER4_BE_VERIFY_TLS=false`.
-**Turn verification on for any real deployment.**
+**We need to turn on verification on for production deployment.**
 
 ### Configuration
 
@@ -70,9 +72,9 @@ The local dev certificate is self-signed, hence `TIER4_BE_VERIFY_TLS=false`.
 default. `.env` is a value source, not the schema; real environment variables
 override it, which is how the container is configured.
 
-`TIER4_BE_EMAIL` and `TIER4_BE_PASSWORD` are **required** (no defaults), so a
-misconfigured deployment fails at startup instead of silently trying a dev
-password. `GET /health` and `tier4 health` report the whole effective config
+`TIER4_BE_EMAIL` and `TIER4_BE_PASSWORD` are **required** (no defaults). 
+
+`GET /health` and `tier4 health` report the whole effective config
 with secrets redacted.
 
 ### API docs
